@@ -2,10 +2,10 @@ import  client  from '../pages/apollo-client';
 import { gql } from '@apollo/client';
 
 
-export default async function  getMediaData(page){
+export default async function  getMediaData(page,search){
 const { data } = await client.query({
     query: gql`
-    query ($page: Int, $perPage: Int) {
+    query ($page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) { 
         pageInfo {
           total
@@ -14,8 +14,11 @@ const { data } = await client.query({
           hasNextPage
           perPage
         }
-        media  {
+        media(search: $search)  {
           id
+          episodes
+          description
+          genres
           title {
             english
           }
@@ -27,7 +30,8 @@ const { data } = await client.query({
   }`,
   variables: {
     page: page,
-    perPage: 20
+    perPage: 18,
+    search: search
   }
 });
 return  {
@@ -36,6 +40,5 @@ return  {
     hasNextPage:data.Page.pageInfo.hasNextPage,
     
   }
-// return data;
 }
 

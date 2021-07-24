@@ -1,11 +1,14 @@
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { GridList, GridListTile, GridListTileBar,ListSubheader, Button,Box} from '@material-ui/core';
+import {ImageList, ImageListItem, ImageListItemBar} from '@material-ui/core';
+import DialogForAnime from './DialogForAnime';
+import Image from 'next/image';
 
 
 
 const useStyles = makeStyles((theme) => ({
+
     root: {
-    marginTop:50,
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'space-around',
@@ -19,22 +22,40 @@ const useStyles = makeStyles((theme) => ({
   }
   ));
 export default function AnimeList({props}){
-    const classes = useStyles();
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState("")
+  
+    const openDialog = (value) => {
+      setOpen(true);
+      setSelectedValue(value)
 
+    }
+    const closeDialog =() => {
+      setOpen(false);
+    }
+    
     return (
     <div className={classes.root}>
-      <GridList spacing={20} cellHeight={180}   >
-        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+     
+      <ImageList gap={10} rowHeight={280}  >
+        <ImageListItem key="Subheader" cols={2} style={{ height: 'auto' }}>
           <p className={classes.para} component="div">Welcome to Anime page</p>
-        </GridListTile>
+        </ImageListItem>
         {props.media.map((tile) => (
-          <GridListTile style={{width:250}} key={tile.coverImage.large}>
-            <img src={tile.coverImage.large} alt={tile.title.english} />
-            <GridListTileBar
-              title={tile.title.english}></GridListTileBar>
-          </GridListTile>
+          <ImageListItem  style={{width:200}} key={tile.coverImage.large} onClick={() => openDialog(tile)}>
+            {/* <Image src={tile.coverImage.large} alt={tile.title.english} width={200}
+      height={500} /> */}
+      <img src={tile.coverImage.large} alt={tile.title.english} />
+            <ImageListItemBar
+              title={tile.title.english}></ImageListItemBar>
+           </ImageListItem>          
         ))}
-      </GridList>
+      </ImageList>
+        {
+          selectedValue ?
+          <DialogForAnime selectedValue={selectedValue} open={open} onClose={closeDialog}  /> : ""
+          } 
     </div>
     )
 

@@ -5,8 +5,7 @@ import AnimeList from './AnimeList';
 import Router from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-
+import SearchBox from './SearchBox'
 
 const useStyles = makeStyles({
     backBtn: {
@@ -22,6 +21,12 @@ const useStyles = makeStyles({
 
 export default function AnimeContainer({props}){
     const classes = useStyles();
+    const handleCallback = (value) => {
+      if(value) Router.push(`/?page=${props.currentPage}&search=${value}`)
+      else if(value === ""){
+        Router.push(`/?page=${props.currentPage}`)
+      }
+    }
 
   return (
   <Container className={classes.container}>
@@ -33,6 +38,8 @@ export default function AnimeContainer({props}){
 
       <main>
       <Typography variant="h1">Anime List</Typography>
+      <SearchBox parentCallback = {handleCallback} />
+
         <AnimeList props={props}/>
         <Box display="flex"  mt={3} >
             <Button className={classes.backBtn} disabled={props.currentPage <= 1 || !props.hasNextPage}  onClick={() => Router.push(`/?page=${props.currentPage - 1}`)} variant="contained" >Back</Button>
